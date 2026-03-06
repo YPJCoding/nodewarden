@@ -22,40 +22,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Sync main from upstream but keep local wrangler.toml
+      - name: Sync main from upstream
         run: |
-          cp wrangler.toml /tmp/nodewarden-wrangler.toml
           git remote add upstream https://github.com/shuaiplus/NodeWarden.git || true
           git fetch upstream
           git checkout main
-          git reset --hard upstream/main
-          cp /tmp/nodewarden-wrangler.toml wrangler.toml
-
-      - name: Update deploy button links in README files
-        env:
-          REPO_SLUG: ${{ github.repository }}
-        run: |
-          python - <<'PY'
-          import os
-          import re
-          from pathlib import Path
-
-          repo_slug = os.environ["REPO_SLUG"]
-          deploy_url = f"https://deploy.workers.cloudflare.com/?url=https://github.com/{repo_slug}"
-          pattern = re.compile(
-              r'https://deploy\.workers\.cloudflare\.com/\?url=https://github\.com/[^)\s]+'
-          )
-
-          for file_name in ("README.md", "README_EN.md"):
-              path = Path(file_name)
-              text = path.read_text(encoding="utf-8")
-              new_text, _ = pattern.subn(deploy_url, text)
-              path.write_text(new_text, encoding="utf-8")
-          PY
+          git merge upstream/main
 
       - name: Push synced main
         run: |
-          git add wrangler.toml README.md README_EN.md
-          git diff --cached --quiet && exit 0
-          git commit -m "chore: sync upstream while keeping local deploy config"
-          git push origin main --force
+          git push origin main

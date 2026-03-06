@@ -50,51 +50,26 @@ English：[`README_EN.md`](./README_EN.md)
 - ⬜ macOS 客户端（未测试）
 ---
 
-# 快速开始
 
-### 一键部署
-
-
-> **若你只是想快速体验，直接点击第 2 步的一键部署按钮即可；以下步骤主要为了后续长期更新。**
+## 网页部署
 
 
-1. 先 Fork 本仓库，并命名为 **NodeWarden**。
-2. 点击下面的按钮，在打开的页面中将项目名称改为 **NodeWarden2**，并将 **JWT_SECRET** 设置为 32 位随机字符串。
-   
-    [![Deploy (R2)](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/shuaiplus/NodeWarden)
-  
-3. 部署完成后，在同一页面打开 Workers 设置，将 `Git 存储库` 断开连接。
-4. 在同一位置重新连接到第 1 步 Fork 的仓库，并在页面底部将`名称` 改回 **NodeWarden**。
-5. GitHub 仓库 **NodeWarden2** 可以删除。
+1. Fork 本仓库。若本项目对你有帮助，欢迎点个 Star。
+2. 打开 [Workers](https://deploy.workers.cloudflare.com/) ➜ 点击 `取消` ➜ `Continue with GitHub` ➜ 选择你 Fork 后的仓库（`NodeWarden`）➜ 下一步 ➜ （默认使用 R2 存储；若未开通，可切换为 KV，并将部署命令改为 `npm run deploy:kv`）➜ 部署 ➜ 打开生成的链接
 
-<details>
-<summary><b>📦 若未绑定银行卡、无法启用 R2 对象存储，可改用 KV 模式</b></summary>
-
-<br>
-
->- **R2**：需绑定银行卡；**单个附件 / Send 文件上限 100 MB**（代码限制，可自行修改）；**总量 10 GB 免费**
->- **KV**：无需绑卡；**单个附件 / Send 文件上限 25 MiB**（Cloudflare 限制，不可修改）；**总量 1 GB 免费**
->
->1. 先 Fork 本仓库，并命名为 **NodeWarden**（默认自动填写）
->2. 进入新仓库，进入 `Actions` 页面，点击 `I understand my workflows, go ahead and enable them`，点击 `Switch to KV mode`，点击`Run Workflow`
->3. 成功后**在你自己的仓库中**点击下面的按钮，在打开的页面中将项目名称改为 **NodeWarden2**，并将 **JWT_SECRET** 设置为 32 位随机字符串。（不能选`创建专用 Git 存储库`）
->
->    [![Deploy (R2)](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/shuaiplus/NodeWarden)
->
->4. 在同一页面打开 Workers 设置，将 `Git 存储库` 断开连接。
->5. 返回Github进入Fork后的仓库（NodeWarden），进入 `Actions` 页面，运行`Import KV ID from NodeWarden2`
->6. 返回cloudflare，`Git 存储库`连接到Fork后的仓库（NodeWarden），并在页面底部将`名称`改回 **NodeWarden**。
->7. GitHub 仓库 **NodeWarden2** 可以删除了。
-
-</details>
+   | 储存 | 是否需绑卡 | 单个附件/Send文件上限 | 免费额度 |
+   |---|---|---|---|
+   | R2 | 需要 | 100 MB（软限制可更改） | 10 GB |
+   | KV | 不需要 | 25 MiB（Cloudflare限制） | 1 GB |
 
 > [!TIP] 
 > 同步方法（更新仓库）：
->- 手动：打开你 Fork 的 GitHub 仓库，看到顶部同步提示后，点击 `Sync fork`，点击`Update branch`
->- 自动：进入你的 Fork 仓库 -> `Actions`->`Sync upstream`->`Enable workflow`，会在每天凌晨 3 点自动同步上游。
+>- 手动：打开你 Fork 的 GitHub 仓库，看到顶部同步提示后，点击 `Sync fork` ➜ `Update branch`
+>- 自动：进入你的 Fork 仓库 ➜ `Actions` ➜ `Sync upstream` ➜ `Enable workflow`，会在每天凌晨 3 点自动同步上游。
 
 
-### CLI 部署
+
+## CLI 部署
 
 ```powershell
 # 先把仓库拉到本地
@@ -107,17 +82,15 @@ npm install
 # Cloudflare CLI 登录
 npx wrangler login
 
-# 创建云资源（D1 + R2）
-npx wrangler d1 create nodewarden-db
-npx wrangler r2 bucket create nodewarden-attachments
-
-# 部署
+# 部署到 Cloudflare
 npm run deploy 
 
 # （可选）KV 模式（无 R2 / 无信用卡）
-npx wrangler kv namespace create ATTACHMENTS_KV
-# 将返回的 namespace id 替换 wrangler.kv.toml 中 `id = "placeholder"` 里的 placeholder（保留双引号）
 npm run deploy:kv
+
+# 本地开发
+npm run dev
+npm run dev:kv
 
 # 后续更新时重新拉取仓库并重新部署即可，无需重复创建云资源
 git clone https://github.com/shuaiplus/NodeWarden.git
@@ -125,16 +98,7 @@ cd NodeWarden
 npm run deploy 
 ```
 
----
 
-## 本地开发
-
-这是一个 Cloudflare Workers 的 TypeScript 项目（Wrangler）。
-
-```bash
-npm install
-npm run dev
-```
 ---
 ## 常见问题
 

@@ -51,46 +51,22 @@
 
 ---
 
-# Quick start
+## Web deploy
 
-### One-click deploy
+1. Fork this repository. If you find this project helpful, please consider giving it a Star.
+2. Open [Workers](https://deploy.workers.cloudflare.com/) -> click `Cancel` -> `Continue with GitHub` -> select your forked repository (`NodeWarden`) -> `Next` -> (R2 storage is used by default; if R2 is unavailable for your account, switch to KV and change the deploy command to `npm run deploy:kv`) -> deploy -> open the generated URL.
 
-> **If you only want a quick trial, simply click the one-click deploy button in step 2. The remaining steps are mainly for long-term maintenance.**
-
-1. Fork this repository and name it **NodeWarden**.
-2. Click the button below. On the page that opens, rename the project to **NodeWarden2** and set **JWT_SECRET** to a random 32-character string.
-
-     [![Deploy](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/shuaiplus/NodeWarden)
-3. After deployment, open the Worker settings on the same page and disconnect the **Git repository**.
-4. Reconnect the **Git repository** to the fork from step 1, then change the **Name** field at the bottom to **NodeWarden**.
-5. The temporary **NodeWarden2** repository can be deleted.
-
-<details>
-<summary><b>📦 If you do not have a payment method attached and cannot enable R2 object storage, you can use KV mode instead</b></summary>
-
-<br>
-
->- **R2**: requires a payment method; **single attachment / Send file limit is 100 MB** (project-level limit, editable in code); **10 GB free storage**
->- **KV**: no card required; **single attachment / Send file limit is 25 MiB** (Cloudflare limit, not editable); **1 GB free storage**
->
->1. Fork this repository and name it **NodeWarden**.
->2. Open the new repository, go to `Actions`, click `I understand my workflows, go ahead and enable them`, then run `Switch to KV mode`.
->3. After that, **in your own repository**, click the button below. On the page that opens, rename the project to **NodeWarden2** and set **JWT_SECRET** to a random 32-character string. Do not select `Create dedicated Git repository`.
->
->    [![Deploy](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/shuaiplus/NodeWarden)
->
->4. On the same page, open Worker settings and disconnect the `Git repository`.
->5. Go back to your forked repository (**NodeWarden**) on GitHub, open `Actions`, and run `Import KV ID from NodeWarden2`.
->6. Return to Cloudflare, reconnect the `Git repository` to your forked repository (**NodeWarden**), and change the `Name` field at the bottom back to **NodeWarden**.
->7. The GitHub repository **NodeWarden2** can then be deleted.
-</details>
+| Storage | Card required | Single attachment / Send file limit | Free tier |
+|---|---|---|---|
+| R2 | Yes | 100 MB (soft limit, can be changed) | 10 GB |
+| KV | No | 25 MiB (Cloudflare limit, cannot be changed) | 1 GB |
 
 > [!TIP] 
 > Sync upstream (keep your fork updated):
 >- Manual: open your fork on GitHub, click `Sync fork`, then click `Update branch`.
 >- Automatic: in your fork, go to `Actions` -> `Sync upstream` -> `Enable workflow`. It will automatically sync from upstream every day at 3 AM.
 
-### CLI deploy 
+## CLI deploy 
 
 ```powershell
 # Clone repository
@@ -103,32 +79,20 @@ npm install
 # Cloudflare CLI login
 npx wrangler login
 
-# Create cloud resources (D1 + R2)
-npx wrangler d1 create nodewarden-db
-npx wrangler r2 bucket create nodewarden-attachments
-
-# Deploy
+# Deploy to Cloudflare
 npm run deploy 
 
 # (Optional) KV mode (no R2 / no credit card)
-npx wrangler kv namespace create ATTACHMENTS_KV
-# Replace placeholder inside `id = "placeholder"` in wrangler.kv.toml with the returned namespace id (keep the quotes)
 npm run deploy:kv
 
-# To update later: re-clone and re-deploy — no need to recreate cloud resources
+# Local development
+npm run dev
+npm run dev:kv
+
+# To update later, pull the repository again and redeploy
 git clone https://github.com/shuaiplus/NodeWarden.git
 cd NodeWarden
 npm run deploy 
-```
-
----
-## Local development
-
-This repo is a Cloudflare Workers TypeScript project (Wrangler).
-
-```bash
-npm install
-npm run dev
 ```
 ---
 
